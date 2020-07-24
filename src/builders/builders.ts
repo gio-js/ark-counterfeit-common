@@ -1,0 +1,1 @@
+export { RegisterManufacturerBuilder } from './registerManufacturerBuilder';
