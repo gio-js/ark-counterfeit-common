@@ -1,0 +1,1 @@
+export { RegisterManufacturerTransactionHandler } from './registerManufacturerTransactionHandler';
