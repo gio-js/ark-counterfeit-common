@@ -1,7 +1,7 @@
-import { RegisterManufacturerTransaction } from './../transactions';
 import { Database, State, TransactionPool } from "@arkecosystem/core-interfaces";
 import { Handlers } from "@arkecosystem/core-transactions";
 import { Interfaces, Transactions, Managers } from "@arkecosystem/crypto";
+import { RegisterManufacturerTransaction } from "../transactions/transactions";
 
 
 export class RegisterManufacturerTransactionHandler extends Handlers.TransactionHandler {

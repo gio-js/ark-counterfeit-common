@@ -1,4 +1,4 @@
-import { Transactions, Utils, Interfaces } from "@arkecosystem/crypto";
+import { Transactions, Utils } from "@arkecosystem/crypto";
 import ByteBuffer from "bytebuffer";
 import { IAnticounterfeitRegisterManufacturerTransaction } from "../interfaces";
 import { ANTICOUNTERFEIT_TRANSACTIONS_TYPE_GROUP, REGISTER_MANUFACTURER_TYPE } from '../const';
@@ -66,7 +66,7 @@ export class RegisterManufacturerTransaction extends Transactions.Transaction {
         const fiscalCodeBytes = Buffer.from(element.CompanyFiscalCode, "utf8");
 
         const buffer = new ByteBuffer(
-            manufacturerAddressIdBytes.length + 
+            manufacturerAddressIdBytes.length +
             prefixIdBytes.length +
             companyNameBytes.length +
             fiscalCodeBytes.length + 4, true);
