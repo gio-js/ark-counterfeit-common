@@ -66,7 +66,7 @@ export class RegisterManufacturerTransaction extends Transactions.Transaction {
         const fiscalCodeBytes = Buffer.from(element.CompanyFiscalCode, "utf8");
 
         const buffer = new ByteBuffer(
-            manufacturerAddressIdBytes.length + 
+            manufacturerAddressIdBytes.length +
             prefixIdBytes.length +
             companyNameBytes.length +
             fiscalCodeBytes.length + 4, true);
