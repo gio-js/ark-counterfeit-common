@@ -1,7 +1,7 @@
 import { Transactions, Utils, Interfaces } from "@arkecosystem/crypto";
-import ByteBuffer from "bytebuffer";
 import { IAnticounterfeitRegisterManufacturerTransaction } from "../interfaces";
 import { ANTICOUNTERFEIT_TRANSACTIONS_TYPE_GROUP, REGISTER_MANUFACTURER_TYPE } from '../const';
+import ByteBuffer from "bytebuffer";
 
 const { schemas } = Transactions;
 
