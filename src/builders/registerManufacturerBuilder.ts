@@ -12,7 +12,7 @@ export class RegisterManufacturerBuilder extends Transactions.TransactionBuilder
         this.data.recipientId = "todo";
         this.data.vendorField = "UniMi-AnticounterfeitProject";
         this.data.fee = Utils.BigNumber.make("100000000");
-        this.data.amount = Utils.BigNumber.ZERO;
+        this.data.amount = Utils.BigNumber.make("1000000000");
         this.data.asset = { AnticounterfeitRegisterManufacturerTransaction: {} };
     }
 
