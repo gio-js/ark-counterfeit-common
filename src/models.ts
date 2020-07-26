@@ -1,10 +1,10 @@
 import { IAnticounterfeitRegisterManufacturerTransaction, IAnticounterfeitRegisterAssetTransaction, IAnticounterfeitTransferAssetTransaction, IAnticounterfeitReceiveProductTransaction } from "./interfaces"
 
 export class AnticounterfeitRegisterManufacturerTransaction implements IAnticounterfeitRegisterManufacturerTransaction {
-    public ManufacturerAddressId: string;
     public ProductPrefixId: string;
     public CompanyName: string;
     public CompanyFiscalCode: string;
+    public RegistrationContract: string;
 }
 
 export class AnticounterfeitRegisterAssetTransaction implements IAnticounterfeitRegisterAssetTransaction {

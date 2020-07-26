@@ -3,11 +3,6 @@
  */
 export interface IAnticounterfeitRegisterManufacturerTransaction {
     /**
-     * Ark Address Id of the manufacturer
-     */
-    ManufacturerAddressId: string,
-
-    /**
      * Product Prefix ID : From SGTIN-96 standard (GS1)
      */
     ProductPrefixId: string
@@ -21,6 +16,11 @@ export interface IAnticounterfeitRegisterManufacturerTransaction {
      * Fiscal code/ VAT number
      */
     CompanyFiscalCode: string
+
+    /**
+     * Base64 document containing subscribed contract by the manufacturer for the service
+     */
+    RegistrationContract: string
 }
 
 /**

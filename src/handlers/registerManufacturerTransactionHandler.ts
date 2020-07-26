@@ -1,7 +1,9 @@
+import { IAnticounterfeitRegisterManufacturerTransaction } from './../interfaces';
 import { Database, State, TransactionPool } from "@arkecosystem/core-interfaces";
 import { Handlers } from "@arkecosystem/core-transactions";
 import { Interfaces, Transactions, Managers } from "@arkecosystem/crypto";
 import { RegisterManufacturerTransaction } from "../transactions/transactions";
+import { REGISTER_MANUFACTURER_TYPE } from "../const";
 
 
 export class RegisterManufacturerTransactionHandler extends Handlers.TransactionHandler {
@@ -41,24 +43,27 @@ export class RegisterManufacturerTransactionHandler extends Handlers.Transaction
         type: string;
         message: string;
     } | null> {
-        // const { ManufacturerAddressId }: { ManufacturerAddressId: string } = data.asset.AnticounterfeitRegisterManufacturerTransaction;
-        // const businessRegistrationsSameNameInPayload = processor
-        //     .getTransactions()
-        //     .filter(tx => tx.type === this.getConstructor().type && tx.asset.AnticounterfeitRegisterManufacturerTransaction.ManufacturerAddressId === ManufacturerAddressId);
+        const parsedTransaction = data.asset.AnticounterfeitRegisterManufacturerTransaction as IAnticounterfeitRegisterManufacturerTransaction;
+        
+         // const { CompanyFiscalCode }: { CompanyFiscalCode: string } =
+        const sameFiscalCodeInPayload = processor
+            .getTransactions()
+            .filter(tx => tx.type === REGISTER_MANUFACTURER_TYPE
+                && tx.asset.AnticounterfeitRegisterManufacturerTransaction.CompanyFiscalCode === parsedTransaction.CompanyFiscalCode);
 
-        // if (businessRegistrationsSameNameInPayload.length > 1) {
-        //     const message = `Multiple transaction related to same manufacturer "${ManufacturerAddressId}"`;
-        //     processor.pushError(
-        //         data,
-        //         "ERR_CONFLICT",
-        //         message,
-        //     );
+        if (sameFiscalCodeInPayload.length > 1) {
+            const message = `Multiple transaction related to same manufacturer "${parsedTransaction.CompanyFiscalCode}"`;
+            processor.pushError(
+                data,
+                "ERR_CONFLICT",
+                message,
+            );
 
-        //     return {
-        //         type: "ERR_CONFLICT",
-        //         message: message
-        //     };
-        // }
+            return {
+                type: "ERR_CONFLICT",
+                message: message
+            };
+        }
 
         // const businessRegistrationsInPool: Interfaces.ITransactionData[] = Array.from(
         //     await pool.getTransactionsByType(this.getConstructor().type),

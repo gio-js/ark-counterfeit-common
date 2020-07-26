@@ -9,19 +9,19 @@ export class RegisterManufacturerBuilder extends Transactions.TransactionBuilder
         this.data.type = REGISTER_MANUFACTURER_TYPE;
         this.data.typeGroup = ANTICOUNTERFEIT_TRANSACTIONS_TYPE_GROUP;
         this.data.version = 2;
-        this.data.recipientId = "todo";
+        this.data.recipientId = "";
         this.data.vendorField = "UniMi-AnticounterfeitProject";
         this.data.fee = Utils.BigNumber.make("100000000");
         this.data.amount = Utils.BigNumber.ZERO;
         this.data.asset = { AnticounterfeitRegisterManufacturerTransaction: {} };
     }
 
-    public manufacturer(addressId: string, prefixId: string, companyName: string, fiscalCode: string): RegisterManufacturerBuilder {
+    public manufacturer(prefixId: string, companyName: string, fiscalCode: string, registrationContract: string): RegisterManufacturerBuilder {
         const element: AnticounterfeitRegisterManufacturerTransaction = {
-            ManufacturerAddressId: addressId,
             ProductPrefixId: prefixId,
             CompanyName: companyName,
-            CompanyFiscalCode: fiscalCode
+            CompanyFiscalCode: fiscalCode,
+            RegistrationContract: registrationContract
         };
         this.data.asset!.AnticounterfeitRegisterManufacturerTransaction = element;
 
