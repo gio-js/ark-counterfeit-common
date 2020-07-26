@@ -17,7 +17,7 @@ export class RegisterManufacturerTransaction extends Transactions.Transaction {
             properties: {
                 type: { transactionType: REGISTER_MANUFACTURER_TYPE },
                 typeGroup: { const: 2001 },
-                amount: { bignumber: { minimum: 1000000000, maximum: 1000000000 } },
+                amount: { bignumber: { minimum: 0, maximum: 0 } },
                 recipientId: { type: "string" },
                 vendorField: { type: "string" },
                 asset: {
@@ -114,7 +114,7 @@ export class RegisterManufacturerTransaction extends Transactions.Transaction {
         const fiscalCodeLength = buf.readUint8();
         AnticounterfeitRegisterManufacturerTransaction.CompanyFiscalCode = buf.readString(fiscalCodeLength);
 
-        data.amount = Utils.BigNumber.make("1000000000");
+        data.amount = Utils.BigNumber.ZERO;
         data.recipientId = recipientId;
         data.vendorField = vendorField;
         data.asset = {
