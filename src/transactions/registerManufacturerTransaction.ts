@@ -61,6 +61,8 @@ export class RegisterManufacturerTransaction extends Transactions.Transaction {
     public serialize(): ByteBuffer {
         const { data } = this;
 
+        const recipientIdBytes = Buffer.from(data.recipientId!, "utf8");
+        const vendorFieldBytes = Buffer.from(data.vendorField!, "utf8");
         const element = data.asset!.AnticounterfeitRegisterManufacturerTransaction as IAnticounterfeitRegisterManufacturerTransaction;
         const manufacturerAddressIdBytes = Buffer.from(element.ManufacturerAddressId, "utf8");
         const prefixIdBytes = Buffer.from(element.ProductPrefixId, "utf8");
@@ -68,10 +70,16 @@ export class RegisterManufacturerTransaction extends Transactions.Transaction {
         const fiscalCodeBytes = Buffer.from(element.CompanyFiscalCode, "utf8");
 
         const buffer = new ByteBuffer(
+            recipientIdBytes.length +
+            vendorFieldBytes.length +
             manufacturerAddressIdBytes.length +
             prefixIdBytes.length +
             companyNameBytes.length +
-            fiscalCodeBytes.length + 4, true);
+            fiscalCodeBytes.length + 6, true);
+        buffer.writeUint8(recipientIdBytes.length);
+        buffer.append(recipientIdBytes, "hex");
+        buffer.writeUint8(vendorFieldBytes.length);
+        buffer.append(vendorFieldBytes, "hex");
         buffer.writeUint8(manufacturerAddressIdBytes.length);
         buffer.append(manufacturerAddressIdBytes, "hex");
         buffer.writeUint8(prefixIdBytes.length);
@@ -88,6 +96,12 @@ export class RegisterManufacturerTransaction extends Transactions.Transaction {
         const { data } = this;
         const AnticounterfeitRegisterManufacturerTransaction = {} as IAnticounterfeitRegisterManufacturerTransaction;
 
+        const recipientIdLength = buf.readUint8();
+        const recipientId = buf.readString(recipientIdLength);
+
+        const vendorFieldLength = buf.readUint8();
+        const vendorField = buf.readString(vendorFieldLength);
+
         const manufacturerAddressIdLength = buf.readUint8();
         AnticounterfeitRegisterManufacturerTransaction.ManufacturerAddressId = buf.readString(manufacturerAddressIdLength);
 
@@ -100,6 +114,8 @@ export class RegisterManufacturerTransaction extends Transactions.Transaction {
         const fiscalCodeLength = buf.readUint8();
         AnticounterfeitRegisterManufacturerTransaction.CompanyFiscalCode = buf.readString(fiscalCodeLength);
 
+        data.recipientId = recipientId;
+        data.vendorField = vendorField;
         data.asset = {
             AnticounterfeitRegisterManufacturerTransaction
         };
