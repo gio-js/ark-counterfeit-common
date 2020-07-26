@@ -1,4 +1,4 @@
-import { Transactions, Utils, Interfaces } from "@arkecosystem/crypto";
+import { Transactions, Utils } from "@arkecosystem/crypto";
 import { IAnticounterfeitRegisterManufacturerTransaction } from "../interfaces";
 import { ANTICOUNTERFEIT_TRANSACTIONS_TYPE_GROUP, REGISTER_MANUFACTURER_TYPE } from '../const';
 import ByteBuffer from "bytebuffer";
@@ -13,7 +13,7 @@ export class RegisterManufacturerTransaction extends Transactions.Transaction {
     public static getSchema(): Transactions.schemas.TransactionSchema {
         return schemas.extend(schemas.transactionBaseSchema, {
             $id: "AnticounterfeitRegisterManufacturerTransaction",
-            required: ["asset", "type", "typeGroup"],
+            required: ["asset", "type", "typeGroup", "recipientId", "vendorField"],
             properties: {
                 type: { transactionType: REGISTER_MANUFACTURER_TYPE },
                 typeGroup: { const: 2001 },

@@ -19,7 +19,7 @@ export class RegisterManufacturerBuilder extends Transactions.TransactionBuilder
             ManufacturerAddressId: addressId,
             ProductPrefixId: prefixId,
             CompanyName: companyName,
-            CompanyFiscalCode: fiscalCode            
+            CompanyFiscalCode: fiscalCode
         };
         this.data.asset!.AnticounterfeitRegisterManufacturerTransaction = element;
 
@@ -28,6 +28,8 @@ export class RegisterManufacturerBuilder extends Transactions.TransactionBuilder
 
     public getStruct(): Interfaces.ITransactionData {
         const struct: Interfaces.ITransactionData = super.getStruct();
+        struct.recipientId = this.data.recipientId;
+        struct.vendorField = this.data.vendorField;
         struct.amount = this.data.amount;
         struct.asset = this.data.asset;
         return struct;
