@@ -43,40 +43,53 @@ export class RegisterManufacturerTransactionHandler extends Handlers.Transaction
         type: string;
         message: string;
     } | null> {
+        const err = await this.typeFromSenderAlreadyInPool(data, pool);
+        if (err !== null) {
+            return err;
+        }
+
         const parsedTransaction = data.asset.AnticounterfeitRegisterManufacturerTransaction as IAnticounterfeitRegisterManufacturerTransaction;
-        
-         // const { CompanyFiscalCode }: { CompanyFiscalCode: string } =
+
+        if (data.senderPublicKey != "03287bfebba4c7881a0509717e71b34b63f31e40021c321f89ae04f84be6d6ac37") {
+            return {
+                type: "ERR_CONFLICT",
+                message: `Transaction sender "${data.senderPublicKey}" not authorized to manufacturer registration.`
+            };
+        }
+
         const sameFiscalCodeInPayload = processor
             .getTransactions()
             .filter(tx => tx.type === REGISTER_MANUFACTURER_TYPE
                 && tx.asset.AnticounterfeitRegisterManufacturerTransaction.CompanyFiscalCode === parsedTransaction.CompanyFiscalCode);
-
         if (sameFiscalCodeInPayload.length > 1) {
-            const message = `Multiple transaction related to same manufacturer "${parsedTransaction.CompanyFiscalCode}"`;
-            processor.pushError(
-                data,
-                "ERR_CONFLICT",
-                message,
-            );
-
             return {
                 type: "ERR_CONFLICT",
-                message: message
+                message: `Multiple registration transaction related to same manufacturer "${parsedTransaction.CompanyFiscalCode}"`
             };
         }
 
-        // const businessRegistrationsInPool: Interfaces.ITransactionData[] = Array.from(
-        //     await pool.getTransactionsByType(this.getConstructor().type),
-        // ).map((memTx: Interfaces.ITransaction) => memTx.data);
+        const businessRegistrationsInPool: Interfaces.ITransactionData[] = Array.from(
+            await pool.getTransactionsByType(this.getConstructor().type),
+        ).map((memTx: Interfaces.ITransaction) => memTx.data);
+        const sameFiscalCodeInPool: boolean = businessRegistrationsInPool.some(
+            tx => tx.asset.AnticounterfeitRegisterManufacturerTransaction.CompanyFiscalCode === parsedTransaction.CompanyFiscalCode,
+        );
+        if (sameFiscalCodeInPool){
+            return {
+                type: "ERR_PENDING",
+                message: `Manufacturer registration for fiscal code "${parsedTransaction.CompanyFiscalCode}" already in the pool`,
+            }
+        }
 
-        // const containsManufacturerRegistrationForSameIdInPool: boolean = businessRegistrationsInPool.some(
-        //     transaction => transaction.asset.AnticounterfeitRegisterManufacturerTransaction.ManufacturerAddressId === ManufacturerAddressId,
-        // );
-
-        // if (containsManufacturerRegistrationForSameIdInPool) {
-        //     processor.pushError(data, "ERR_PENDING", `Manufacturer registration for "${ManufacturerAddressId}" already in the pool`);
-        //     return null;
-        // }
+        const samePrefixProductIdInPool: boolean = businessRegistrationsInPool.some(
+            tx => tx.asset.AnticounterfeitRegisterManufacturerTransaction.ProductPrefixId === parsedTransaction.ProductPrefixId,
+        );
+        if (samePrefixProductIdInPool){
+            return {
+                type: "ERR_PENDING",
+                message: `Manufacturer registration for product prefix id "${parsedTransaction.CompanyFiscalCode}" already in the pool`,
+            }
+        }
 
         return null;
     }
