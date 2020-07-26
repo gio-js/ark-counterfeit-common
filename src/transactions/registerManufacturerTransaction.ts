@@ -79,14 +79,13 @@ export class RegisterManufacturerTransaction extends Transactions.Transaction {
         buffer.writeUint8(recipientIdBytes.length);
         buffer.append(recipientIdBytes, "hex");
         buffer.writeUint8(vendorFieldBytes.length);
+        buffer.append(vendorFieldBytes, "hex");
         buffer.writeUint8(prefixIdBytes.length);
         buffer.append(prefixIdBytes, "hex");
         buffer.writeUint8(companyNameBytes.length);
         buffer.append(companyNameBytes, "hex");
         buffer.writeUint8(fiscalCodeBytes.length);
         buffer.append(fiscalCodeBytes, "hex");
-        buffer.writeUint8(vendorFieldBytes.length);
-        buffer.append(vendorFieldBytes, "hex");
         buffer.writeUint8(registrationContractBytes.length);
         buffer.append(registrationContractBytes, "hex");
 
