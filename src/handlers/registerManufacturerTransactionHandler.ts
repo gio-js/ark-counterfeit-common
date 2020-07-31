@@ -3,8 +3,11 @@ import { Database, State, TransactionPool } from "@arkecosystem/core-interfaces"
 import { Handlers } from "@arkecosystem/core-transactions";
 import { Interfaces, Transactions, Managers } from "@arkecosystem/crypto";
 import { RegisterManufacturerTransaction } from "../transactions/transactions";
-import { REGISTER_MANUFACTURER_TYPE } from "../const";
+import { app } from "@arkecosystem/core-container";
+import { ManufacturerAlreadyRegisteredError } from '../errors';
 
+// import { writeFileSync } from 'fs';
+// const path = require('path');
 
 export class RegisterManufacturerTransactionHandler extends Handlers.TransactionHandler {
     public getConstructor(): Transactions.TransactionConstructor {
@@ -32,6 +35,51 @@ export class RegisterManufacturerTransactionHandler extends Handlers.Transaction
         wallet: State.IWallet,
         databaseWalletManager: State.IWalletManager,
     ): Promise<void> {
+        const connection: Database.IConnection = app.resolvePlugin<Database.IDatabaseService>("database").connection;
+        const parsedTransaction = transaction.data.asset.AnticounterfeitRegisterManufacturerTransaction as IAnticounterfeitRegisterManufacturerTransaction;
+
+        const dbRegistrationTransactions = await connection.transactionsRepository.search({
+            parameters: [
+                {
+                    field: "senderPublicKey",
+                    value: transaction.data.senderPublicKey,
+                    operator: Database.SearchOperator.OP_EQ,
+                },
+                {
+                    field: "type",
+                    value: transaction.data.type,
+                    operator: Database.SearchOperator.OP_EQ,
+                },
+                {
+                    field: "typeGroup",
+                    value: transaction.data.typeGroup,
+                    operator: Database.SearchOperator.OP_EQ,
+                },
+                {
+                    field: "asset",
+                    value: JSON.stringify({
+                        AnticounterfeitRegisterManufacturerTransaction: {
+                            CompanyFiscalCode: transaction.data.asset.AnticounterfeitRegisterManufacturerTransaction.CompanyFiscalCode
+                        }
+                    }),
+                    operator: Database.SearchOperator.OP_CONTAINS,
+                },
+            ],
+        });
+        // const elements = JSON.stringify(dbRegistrationTransactions);
+        // console.log(__dirname);
+        // console.log(elements);
+        // await writeFileSync(path.join(__dirname, "temp.json"), elements);
+
+        const manufacturerRegisteredWithSameFiscalCode = dbRegistrationTransactions.rows.filter(tx =>
+            tx.asset != null &&
+            tx.asset!.AnticounterfeitRegisterManufacturerTransaction.CompanyFiscalCode === parsedTransaction.CompanyFiscalCode);
+
+
+        if (manufacturerRegisteredWithSameFiscalCode.length > 0) {
+            throw new ManufacturerAlreadyRegisteredError();
+        }
+
         await super.throwIfCannotBeApplied(transaction, wallet, databaseWalletManager);
     }
 
@@ -59,7 +107,7 @@ export class RegisterManufacturerTransactionHandler extends Handlers.Transaction
 
         const sameFiscalCodeInPayload = processor
             .getTransactions()
-            .filter(tx => tx.type === REGISTER_MANUFACTURER_TYPE
+            .filter(tx => tx.type === this.getConstructor().type
                 && tx.asset.AnticounterfeitRegisterManufacturerTransaction.CompanyFiscalCode === parsedTransaction.CompanyFiscalCode);
         if (sameFiscalCodeInPayload.length > 1) {
             return {
@@ -68,13 +116,22 @@ export class RegisterManufacturerTransactionHandler extends Handlers.Transaction
             };
         }
 
+        // var transactionsByDatabase = this.connection.transactionsRepository.search({
+        //     parameters: [
+        //         { field: "type", value: "201", operator: Database.SearchOperator.OP_EQ },
+        //         //{ field: "asset.AnticounterfeitRegisterManufacturerTransaction.CompanyFiscalCode", value: parsedTransaction.CompanyFiscalCode, operator: Database.SearchOperator.OP_EQ }
+        //     ]
+        // } as Database.ISearchParameters)
+
+
+        const transactionsByPool = await pool.getTransactionsByType(this.getConstructor().type);
         const businessRegistrationsInPool: Interfaces.ITransactionData[] = Array.from(
-            await pool.getTransactionsByType(this.getConstructor().type),
+            transactionsByPool,
         ).map((memTx: Interfaces.ITransaction) => memTx.data);
         const sameFiscalCodeInPool: boolean = businessRegistrationsInPool.some(
             tx => tx.asset.AnticounterfeitRegisterManufacturerTransaction.CompanyFiscalCode === parsedTransaction.CompanyFiscalCode,
         );
-        if (sameFiscalCodeInPool){
+        if (sameFiscalCodeInPool) {
             return {
                 type: "ERR_PENDING",
                 message: `Manufacturer registration for fiscal code "${parsedTransaction.CompanyFiscalCode}" already in the pool`,
@@ -84,7 +141,7 @@ export class RegisterManufacturerTransactionHandler extends Handlers.Transaction
         const samePrefixProductIdInPool: boolean = businessRegistrationsInPool.some(
             tx => tx.asset.AnticounterfeitRegisterManufacturerTransaction.ProductPrefixId === parsedTransaction.ProductPrefixId,
         );
-        if (samePrefixProductIdInPool){
+        if (samePrefixProductIdInPool) {
             return {
                 type: "ERR_PENDING",
                 message: `Manufacturer registration for product prefix id "${parsedTransaction.CompanyFiscalCode}" already in the pool`,

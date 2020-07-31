@@ -16,7 +16,7 @@ export class RegisterManufacturerTransaction extends Transactions.Transaction {
             required: ["asset", "type", "typeGroup", "recipientId", "vendorField"],
             properties: {
                 type: { transactionType: REGISTER_MANUFACTURER_TYPE },
-                typeGroup: { const: 2001 },
+                typeGroup: { const: ANTICOUNTERFEIT_TRANSACTIONS_TYPE_GROUP },
                 amount: { bignumber: { minimum: 0, maximum: 0 } },
                 recipientId: { type: "string" },
                 vendorField: { type: "string" },
@@ -61,6 +61,9 @@ export class RegisterManufacturerTransaction extends Transactions.Transaction {
     public serialize(): ByteBuffer {
         const { data } = this;
 
+        // const { addressBuffer, addressError } = Identities.Address.toBuffer(data.recipientId);
+        // options.addressError = addressError;
+
         const recipientIdBytes = Buffer.from(data.recipientId!, "utf8");
         const vendorFieldBytes = Buffer.from(data.vendorField!, "utf8");
         const element = data.asset!.AnticounterfeitRegisterManufacturerTransaction as IAnticounterfeitRegisterManufacturerTransaction;
@@ -74,8 +77,11 @@ export class RegisterManufacturerTransaction extends Transactions.Transaction {
             vendorFieldBytes.length +
             prefixIdBytes.length +
             companyNameBytes.length +
-            fiscalCodeBytes.length + 
-            registrationContractBytes.length + 6, true);
+            fiscalCodeBytes.length +
+            registrationContractBytes.length + (1 + 5), true);
+
+        // buffer.writeUint8(addressBuffer.length);
+        // buffer.append(addressBuffer);
         buffer.writeUint8(recipientIdBytes.length);
         buffer.append(recipientIdBytes, "hex");
         buffer.writeUint8(vendorFieldBytes.length);
@@ -97,23 +103,23 @@ export class RegisterManufacturerTransaction extends Transactions.Transaction {
         const AnticounterfeitRegisterManufacturerTransaction = {} as IAnticounterfeitRegisterManufacturerTransaction;
 
         const recipientIdLength = buf.readUint8();
-        const recipientId = buf.readString(recipientIdLength);
+        const recipientId = buf.readString(recipientIdLength); //Identities.Address.fromBuffer(buf.readBytes(recipientIdLength).toBuffer());
 
         const vendorFieldLength = buf.readUint8();
         const vendorField = buf.readString(vendorFieldLength);
-        
+
         const prefixIdLength = buf.readUint8();
         AnticounterfeitRegisterManufacturerTransaction.ProductPrefixId = buf.readString(prefixIdLength);
-        
+
         const companyNameLength = buf.readUint8();
         AnticounterfeitRegisterManufacturerTransaction.CompanyName = buf.readString(companyNameLength);
-        
+
         const fiscalCodeLength = buf.readUint8();
         AnticounterfeitRegisterManufacturerTransaction.CompanyFiscalCode = buf.readString(fiscalCodeLength);
-        
+
         const registrationContractLength = buf.readUint8();
         AnticounterfeitRegisterManufacturerTransaction.RegistrationContract = buf.readString(registrationContractLength);
-        
+
         data.amount = Utils.BigNumber.ZERO;
         data.recipientId = recipientId;
         data.vendorField = vendorField;
