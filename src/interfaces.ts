@@ -24,14 +24,14 @@ export interface IAnticounterfeitRegisterManufacturerTransaction {
 }
 
 /**
- * Registration of a new asset (related to a manufacturer)
+ * Registration of a new product (related to a manufacturer)
  */
-export interface IAnticounterfeitRegisterAssetTransaction {
+export interface IAnticounterfeitRegisterProductTransaction {
 
     /**
-     * Asset unique identifier
+     * Product unique identifier
      */
-    AssetId: string;
+    ProductId: string;
 
     /**
      * Asset description
@@ -50,14 +50,14 @@ export interface IAnticounterfeitRegisterAssetTransaction {
 }
 
 /**
- * Asset transfer transaction
+ * Product transfer transaction
  */
-export interface IAnticounterfeitTransferAssetTransaction {
+export interface IAnticounterfeitTransferProductTransaction {
 
     /**
-     * Asset unique identifier
+     * Product unique identifier
      */
-    AssetId: string;
+    ProductId: string;
 
     /**
      * Sender Ark.io address id (current owner of the assest)
@@ -72,14 +72,14 @@ export interface IAnticounterfeitTransferAssetTransaction {
 }
 
 /**
- * Asset receive transaction
+ * Product receive transaction
  */
 export interface IAnticounterfeitReceiveProductTransaction {
 
     /**
-     * Asset unique identifier
+     * Product unique identifier
      */
-    AssetId: string;
+    ProductId: string;
 
     /**
      * Sender Ark.io address id (current owner of the assest)

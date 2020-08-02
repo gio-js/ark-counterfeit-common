@@ -1,4 +1,7 @@
-import { IAnticounterfeitRegisterManufacturerTransaction, IAnticounterfeitRegisterAssetTransaction, IAnticounterfeitTransferAssetTransaction, IAnticounterfeitReceiveProductTransaction } from "./interfaces"
+import {
+    IAnticounterfeitRegisterManufacturerTransaction, IAnticounterfeitRegisterProductTransaction,
+    IAnticounterfeitReceiveProductTransaction, IAnticounterfeitTransferProductTransaction
+} from "./interfaces"
 
 export class AnticounterfeitRegisterManufacturerTransaction implements IAnticounterfeitRegisterManufacturerTransaction {
     public ProductPrefixId: string;
@@ -7,21 +10,21 @@ export class AnticounterfeitRegisterManufacturerTransaction implements IAnticoun
     public RegistrationContract: string;
 }
 
-export class AnticounterfeitRegisterAssetTransaction implements IAnticounterfeitRegisterAssetTransaction {
-    public AssetId: string;
+export class AnticounterfeitRegisterProductTransaction implements IAnticounterfeitRegisterProductTransaction {
+    public ProductId: string;
     public Description: string;
     public ManufacturerAddressId: string;
     public Metadata: string[];
 }
 
-export class AnticounterfeitTransferAssetTransaction implements IAnticounterfeitTransferAssetTransaction {
-    public AssetId: string;
+export class AnticounterfeitTransferProductTransaction implements IAnticounterfeitTransferProductTransaction {
+    public ProductId: string;
     public SenderAddressId: string;
     public RecipientAddressId: string;
 }
 
 export class AnticounterfeitReceiveProductTransaction implements IAnticounterfeitReceiveProductTransaction {
-    public AssetId: string;
+    public ProductId: string;
     public SenderAddressId: string;
     public RecipientAddressId: string;
 }

@@ -1,7 +1,7 @@
 
 import { Transactions, Utils, Interfaces } from "@arkecosystem/crypto";
 import { AnticounterfeitRegisterManufacturerTransaction } from "../models";
-import { REGISTER_MANUFACTURER_TYPE, ANTICOUNTERFEIT_TRANSACTIONS_TYPE_GROUP } from "../const";
+import { REGISTER_MANUFACTURER_TYPE, ANTICOUNTERFEIT_TRANSACTIONS_TYPE_GROUP, VENDOR_FIELD } from "../const";
 
 export class RegisterManufacturerBuilder extends Transactions.TransactionBuilder<RegisterManufacturerBuilder> {
     constructor() {
@@ -10,7 +10,7 @@ export class RegisterManufacturerBuilder extends Transactions.TransactionBuilder
         this.data.typeGroup = ANTICOUNTERFEIT_TRANSACTIONS_TYPE_GROUP;
         this.data.version = 2;
         this.data.recipientId = "";
-        this.data.vendorField = "UniMi-AnticounterfeitProject";
+        this.data.vendorField = VENDOR_FIELD;
         this.data.fee = Utils.BigNumber.make("100000000");
         this.data.amount = Utils.BigNumber.ZERO;
         this.data.asset = { AnticounterfeitRegisterManufacturerTransaction: {} };

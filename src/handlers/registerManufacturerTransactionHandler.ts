@@ -5,6 +5,7 @@ import { Interfaces, Transactions, Managers } from "@arkecosystem/crypto";
 import { RegisterManufacturerTransaction } from "../transactions/transactions";
 import { app } from "@arkecosystem/core-container";
 import { ManufacturerAlreadyRegisteredError } from '../errors';
+import { ENABLED_WALLET_TO_MANUFACTURER_REGISTRATION_PKEY } from '../const';
 
 // import { writeFileSync } from 'fs';
 // const path = require('path');
@@ -98,7 +99,7 @@ export class RegisterManufacturerTransactionHandler extends Handlers.Transaction
 
         const parsedTransaction = data.asset.AnticounterfeitRegisterManufacturerTransaction as IAnticounterfeitRegisterManufacturerTransaction;
 
-        if (data.senderPublicKey != "03287bfebba4c7881a0509717e71b34b63f31e40021c321f89ae04f84be6d6ac37") {
+        if (data.senderPublicKey != ENABLED_WALLET_TO_MANUFACTURER_REGISTRATION_PKEY) {
             return {
                 type: "ERR_CONFLICT",
                 message: `Transaction sender "${data.senderPublicKey}" not authorized to manufacturer registration.`
