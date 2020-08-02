@@ -8,7 +8,7 @@ export class RestTransactionContainer<T> {
     /** 
      * Sender public key
      */
-    Nonce: number;
+    Nonce: string;
 
     /** 
      * Sender public key
