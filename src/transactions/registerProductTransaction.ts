@@ -23,7 +23,7 @@ export class RegisterProductTransaction extends Transactions.Transaction {
                     type: "object",
                     required: ["AnticounterfeitRegisterProductTransaction"],
                     properties: {
-                        AnticounterfeitRegisterManufacturerTransaction: {
+                        AnticounterfeitRegisterProductTransaction: {
                             type: "object",
                             required: ["ProductId", "Description", "ManufacturerAddressId", "Metadata"],
                             properties: {
@@ -43,9 +43,7 @@ export class RegisterProductTransaction extends Transactions.Transaction {
                                     maxLength: 56,
                                 },
                                 Metadata: {
-                                    type: "array",
-                                    maxItems : "3",
-                                    additionalItems: { "type": "string" }
+                                    type: "array"
                                 }
                             },
                         },
