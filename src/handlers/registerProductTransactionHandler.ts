@@ -1,9 +1,7 @@
 import { RegisterProductTransaction } from './../transactions/registerProductTransaction';
-import { IAnticounterfeitRegisterManufacturerTransaction } from './../interfaces';
 import { Database, State, TransactionPool } from "@arkecosystem/core-interfaces";
 import { Handlers } from "@arkecosystem/core-transactions";
 import { Interfaces, Transactions, Managers } from "@arkecosystem/crypto";
-import { app } from "@arkecosystem/core-container";
 
 export class RegisterProductTransactionHandler extends Handlers.TransactionHandler {
     public getConstructor(): Transactions.TransactionConstructor {

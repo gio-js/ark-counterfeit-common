@@ -15,7 +15,7 @@ export class RegisterProductBuilder extends Transactions.TransactionBuilder<Regi
         this.data.asset = { AnticounterfeitRegisterProductTransaction: {} };
     }
 
-    public manufacturer(productId: string, description: string, manufacturerAddressId: string, metadata: string[]): RegisterProductBuilder {
+    public product(productId: string, description: string, manufacturerAddressId: string, metadata: string[]): RegisterProductBuilder {
         const element: AnticounterfeitRegisterProductTransaction = {
             ProductId: productId,
             Description: description,
