@@ -82,11 +82,6 @@ export interface IAnticounterfeitReceiveProductTransaction {
     ProductId: string;
 
     /**
-     * Sender Ark.io address id (current owner of the assest)
-     */
-    SenderAddressId: string;
-
-    /**
      * Recipient Ark.io address id (next owner of the assest)
      */
     RecipientAddressId: string;

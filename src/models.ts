@@ -25,6 +25,5 @@ export class AnticounterfeitTransferProductTransaction implements IAnticounterfe
 
 export class AnticounterfeitReceiveProductTransaction implements IAnticounterfeitReceiveProductTransaction {
     public ProductId: string;
-    public SenderAddressId: string;
     public RecipientAddressId: string;
 }
