@@ -80,23 +80,31 @@ export class ReceiveProductTransactionHandler extends Handlers.TransactionHandle
         const completeTransactions = dbRegProductsTransactions.rows
             .concat(dbTransferProductsTransactions.rows)
             .concat(dbReceiveProductsTransactions.rows);
-        const sortedTransactions = completeTransactions.sort((t1, t2) => {
-            if (t1.timestamp > t2.timestamp) return 1;
-            if (t1.timestamp < t2.timestamp) return -1;
+        const sortedTransactions = completeTransactions.sort((t1, t2) => { // sort descending
+            if (t1.nonce > t2.nonce) return -1;
+            if (t1.nonce < t2.nonce) return 1;
             return 0;
         });
 
+        // console.log("---------------------------------------------------------------- receive");
+        // console.log(JSON.stringify(completeTransactions));
+        // console.log("---------------------------------------------------------------- receive");
+
+        let lastTransactionIsValid = false;
         if (sortedTransactions && sortedTransactions.length > 0) {
             const transferTransaction = sortedTransactions[0];
 
             // last transaction related to the product is a transfer
             // the recipient must be the current transaction recipient
-            if (transferTransaction.type != TRANSFER_PRODUCT_TYPE ||
-                (transferTransaction.type == TRANSFER_PRODUCT_TYPE &&
-                transferTransaction.asset.AnticounterfeitReceiveProductTransaction.RecipientAddressId != recipientId)) {
-                throw new ProductNotTransferredToThisRecipientError();
+            if (transferTransaction.type == TRANSFER_PRODUCT_TYPE &&
+                transferTransaction.asset.AnticounterfeitTransferProductTransaction.RecipientAddressId == recipientId) {
+                    lastTransactionIsValid = true;
+
             }
         }
+
+        if (!lastTransactionIsValid)
+            throw new ProductNotTransferredToThisRecipientError();
 
         await super.throwIfCannotBeApplied(transaction, wallet, databaseWalletManager);
     }
